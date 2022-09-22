@@ -14,6 +14,8 @@
 #include <QAction>
 #include <QActionGroup>
 #include <QDialog>
+#include <QTabBar>
+#include <QToolButton>
 #include <QPlainTextEdit>
 
 extern String s_serenity_resource_root;
@@ -26,7 +28,10 @@ BrowserWindow::BrowserWindow()
     m_tabs_container->setMovable(true);
     m_tabs_container->setTabsClosable(true);
     m_tabs_container->setDocumentMode(true);
-    m_tabs_container->setTabBarAutoHide(true);
+    QIcon icon = QIcon::fromTheme("tab-new");
+    QToolButton *new_tab_btn = new QToolButton();
+    new_tab_btn->setIcon(icon);
+    m_tabs_container->setCornerWidget(new_tab_btn, Qt::TopRightCorner);
 
     auto* menu = menuBar()->addMenu(tr("&File"));
 
@@ -209,6 +214,7 @@ BrowserWindow::BrowserWindow()
     });
 
     QObject::connect(new_tab_action, &QAction::triggered, this, &BrowserWindow::new_tab);
+    QObject::connect(new_tab_btn, &QAbstractButton::clicked, this, &BrowserWindow::new_tab);
     QObject::connect(settings_action, &QAction::triggered, this, [this] {
         new SettingsDialog(this);
     });
